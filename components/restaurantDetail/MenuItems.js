@@ -5,38 +5,12 @@ import { Divider } from "react-native-elements";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 
-const foods = [
-    {
-        title: "Tandoori Chicken",
-        description:
-            "Amazing Indian dish with tenderloin chicken off the sizzles",
-        price: "$19.20",
-        image: "https://images.unsplash.com/photo-1504674900247-0877df9cc836?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8Zm9vZHxlbnwwfDB8MHx8&auto=format&fit=crop&w=500&q=60",
-    },
-    {
-        title: "Chilaquiles",
-        description:
-            "Amazing Indian dish with tenderloin chicken off the sizzles",
-        price: "$14.50",
-        image: "https://images.unsplash.com/photo-1499028344343-cd173ffc68a9?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Nnx8Zm9vZHxlbnwwfDB8MHx8&auto=format&fit=crop&w=500&q=60",
-    },
-    {
-        title: "Waffles",
-        description:
-            "Amazing Indian dish with tenderloin chicken off the sizzles",
-        price: "$19.20",
-        image: "https://images.unsplash.com/photo-1493770348161-369560ae357d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8NXx8Zm9vZHxlbnwwfDB8MHx8&auto=format&fit=crop&w=500&q=60",
-    },
-    {
-        title: "Fries",
-        description:
-            "Amazing Indian dish with tenderloin chicken off the sizzles",
-        price: "$19.20",
-        image: "https://images.unsplash.com/photo-1606787366850-de6330128bfc?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8OXx8Zm9vZHxlbnwwfDB8MHx8&auto=format&fit=crop&w=500&q=60",
-    },
-];
-
-export default function MenuItems({ restaurantName }) {
+export default function MenuItems({
+    restaurantName,
+    foods,
+    hideCheckbox,
+    marginLeft,
+}) {
     const dispatch = useDispatch();
     const selectItem = (item, checkboxValue) =>
         dispatch({
@@ -58,23 +32,30 @@ export default function MenuItems({ restaurantName }) {
             {foods.map((food, index) => (
                 <View key={index}>
                     <View style={styles.menuItemStyle}>
-                        <BouncyCheckbox
-                            iconStyle={{
-                                borderColor: "lightgray",
-                                borderRadius: 8,
-                            }}
-                            fillColor="green"
-                            onPress={(checkboxValue) =>
-                                selectItem(food, checkboxValue)
-                            }
-                            isChecked={isFoodInCart(food, cartItems)}
-                        />
+                        {hideCheckbox ? (
+                            <></>
+                        ) : (
+                            <BouncyCheckbox
+                                iconStyle={{
+                                    borderColor: "lightgray",
+                                    borderRadius: 8,
+                                }}
+                                fillColor="green"
+                                onPress={(checkboxValue) =>
+                                    selectItem(food, checkboxValue)
+                                }
+                                isChecked={isFoodInCart(food, cartItems)}
+                            />
+                        )}
                         <FoodInfo
                             title={food.title}
                             description={food.description}
                             price={food.price}
                         />
-                        <FoodImage image={food.image} />
+                        <FoodImage
+                            image={food.image}
+                            marginLeft={marginLeft ? marginLeft : 0}
+                        />
                     </View>
                     <Divider
                         width={0.5}
@@ -95,11 +76,16 @@ const FoodInfo = ({ title, description, price }) => (
     </View>
 );
 
-const FoodImage = ({ image }) => (
+const FoodImage = ({ image, marginLeft }) => (
     <View>
         <Image
             source={{ uri: image }}
-            style={{ width: 100, height: 100, borderRadius: 8 }}
+            style={{
+                width: 100,
+                height: 100,
+                borderRadius: 8,
+                marginLeft: marginLeft,
+            }}
         />
     </View>
 );
